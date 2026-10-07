@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: itu
+      POSTGRES_PASSWORD: itu_dev_password
+      POSTGRES_DB: itu_scoreboard
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U itu -d itu_scoreboard"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgres://itu:itu_dev_password@db:5432/itu_scoreboard
+      JWT_SECRET: change-me-to-a-long-random-string-at-least-32-chars
+      CORS_ORIGINS: http://localhost:3000
+    ports: ["4000:4000"]
+
+volumes:
+  pgdata:

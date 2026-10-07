@@ -1,0 +1,2 @@
+# Cloudflare Pages: keep SPA routes (/screen/*, /admin) client-side
+/*  /index.html  200
