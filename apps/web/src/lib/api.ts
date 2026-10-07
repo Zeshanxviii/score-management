@@ -21,7 +21,7 @@ export class ApiError extends Error {
   constructor(public status: number, public code: string, message: string) { super(message); }
 }
 
-const V1 = `${(import.meta.env.VITE_API_URL as string | undefined) ?? ''}/api/v1`;
+const V1 = `${((import.meta.env.VITE_API_URL as string | undefined) ?? '').replace(/\/+$/, '')}/api/v1`;
 
 async function raw(path: string, o: { method?: string; body?: unknown; token?: string | null } = {}): Promise<any> {
   let res: Response;
